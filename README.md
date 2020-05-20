@@ -63,6 +63,7 @@ Personally I would use "force" only with "nooutput".
 #### Kernel.php
 To use the logging, you have to include the Trait `LaravelSchedulerWatcher` into your `app\Console\Kernel.php`
 ```php
+<?php
 use macropage\LaravelSchedulerWatcher\LaravelSchedulerWatcher;
 
 class Kernel extends ConsoleKernel {
