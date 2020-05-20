@@ -263,7 +263,7 @@ _yes, you can hire me!_
 
 
 ## Credits
-
+- [Michael Bladowski](https://github.com/michabbb)
 - [Laravel Totem](https://github.com/codestudiohq/laravel-totem)
 - [mirzabusatlic/laravel-schedule-monitor](https://github.com/mirzabusatlic/laravel-schedule-monitor)
 
