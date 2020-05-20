@@ -1,0 +1,13 @@
+build
+composer.lock
+docs
+vendor
+coverage
+.editorconfig
+.gitattributes
+.scrutinizer.yml
+.styleci.yml
+.travis.yml
+phpunit.xml.dist
+CHANGELOG.md
+.idea
