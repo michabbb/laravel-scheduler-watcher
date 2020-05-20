@@ -1,0 +1,55 @@
+{
+    "name": "macropage/laravel-scheduler-watcher",
+    "description": "logs artisan commands run via scheduler to mysql with plenty of infos, prevent running command again in case of error, allows full monitoing of artisan commands",
+    "keywords": [
+        "macropage",
+        "laravel-scheduler-watcher"
+    ],
+    "homepage": "https://github.com/macropage/laravel-scheduler-watcher",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Michael Bladowski",
+            "email": "mbladowski@macropage.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "malios/php-to-ascii-table" : "^2.0",
+        "codedungeon/php-cli-colors" : "^1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "macropage\\LaravelSchedulerWatcher\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "macropage\\LaravelSchedulerWatcher\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "macropage\\LaravelSchedulerWatcher\\LaravelSchedulerWatcherServiceProvider"
+            ],
+            "aliases": {
+                "SchedulerWatcher": "macropage\\LaravelSchedulerWatcher\\LaravelSchedulerWatcherFacade"
+            }
+        }
+    }
+}
