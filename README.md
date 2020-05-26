@@ -258,7 +258,7 @@ generates any output at all. if your job does "nothing" because of some conditio
 make sure you do at least something like: `$this->info('nothing todo....');` 
 
 ## More Documentation
-[gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher/nagios)
+[gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher)
 
 ## Contributing
 
