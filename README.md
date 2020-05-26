@@ -201,7 +201,7 @@ This Helper only returns the last output of the last run of your job and exits w
 echo $?
 1
 ```
-With that you are able to build checks for your monitoring system, for instance [Nagios](https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/3/en/pluginapi.html).  
+With that you are able to build checks for your monitoring system, for instance [Nagios](https://michabbb.gitbook.io/laravel-scheduler-watcher/nagios).  
 Of course you can use the data directly from the DB, this is just something I created for myself ;)  
 
 
