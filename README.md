@@ -251,6 +251,11 @@ if you prefer having log-informations on a long term, i suggest to add new table
 that duplicates all entries. with that you don´t loose performance with the active table `job_events` and you are  
 able to collect data for a long time, for instance you want to check the duration of your jobs over months. 
 
+**i am using [log] but there is no entry in table 'job_events'**  
+you will see entries in `job_events` and `job_event_outputs` **ONLY** if your job  
+generates any output at all. if your job does "nothing" because of some conditions,  
+make sure you do at least something like: `$this->info('nothing todo....');` 
+
 ## Contributing
 
 Help is appreciated :-)
