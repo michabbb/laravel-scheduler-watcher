@@ -1,3 +1,4 @@
+![](https://i.imgur.com/6K53KE2.png)
 # Monitor your laravel crons like a pro
 
 Log your scheduled commands with start, end, duration, exitcode and output in a seperate database.  
@@ -255,6 +256,9 @@ able to collect data for a long time, for instance you want to check the duratio
 you will see entries in `job_events` and `job_event_outputs` **ONLY** if your job  
 generates any output at all. if your job does "nothing" because of some conditions,  
 make sure you do at least something like: `$this->info('nothing todo....');` 
+
+## More Documentation
+[gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher/nagios)
 
 ## Contributing
 
