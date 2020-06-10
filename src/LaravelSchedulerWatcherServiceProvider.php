@@ -3,6 +3,8 @@
 namespace macropage\LaravelSchedulerWatcher;
 
 use Illuminate\Support\ServiceProvider;
+use macropage\LaravelSchedulerWatcher\Console\SchedulerWatcherCommandCleanUp;
+use macropage\LaravelSchedulerWatcher\Console\SchedulerWatcherCommandCleanUpAll;
 use macropage\LaravelSchedulerWatcher\Console\SchedulerWatcherCommandInfo;
 use macropage\LaravelSchedulerWatcher\Console\SchedulerWatcherCommandCheckLastRun;
 
@@ -24,7 +26,9 @@ class LaravelSchedulerWatcherServiceProvider extends ServiceProvider {
                              ], 'config');
             $this->commands([
                                 SchedulerWatcherCommandInfo::class,
-                                SchedulerWatcherCommandCheckLastRun::class
+                                SchedulerWatcherCommandCheckLastRun::class,
+                                SchedulerWatcherCommandCleanUp::class,
+                                SchedulerWatcherCommandCleanUpAll::class
                             ]);
         }
     }

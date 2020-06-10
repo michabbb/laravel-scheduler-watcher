@@ -192,7 +192,7 @@ hint: `job_md5` is my custome-mutex i am talking all along ;)
 
 ### scheduler-watcher:checklastevent
 `artisan scheduler-watcher:checklastevent <mutex>`  
-Exmaple: `artisan scheduler-watcher:checklastevent 4a1a273959acfc335fb3fd01a069bec9`
+Example: `artisan scheduler-watcher:checklastevent 4a1a273959acfc335fb3fd01a069bec9`
 ```text
 Last exitcode from job: Command description: [1] - last output: yeah.....
 ```  
@@ -204,6 +204,15 @@ echo $?
 With that you are able to build checks for your monitoring system, for instance [Nagios](https://michabbb.gitbook.io/laravel-scheduler-watcher/nagios).  
 Of course you can use the data directly from the DB, this is just something I created for myself ;)  
 
+### scheduler-watcher:cleanup
+`artisan scheduler-watcher:cleanup <mutex> --keep <int>`  
+Example: `artisan scheduler-watcher:cleanup 4a1a273959acfc335fb3fd01a069bec9 --keep 20`  
+This Command deletes all job_event entries of your job from table `job_events` except tha last 20 newest
+
+### scheduler-watcher:cleanup-all
+`artisan scheduler-watcher:cleanup-all --keep <int>`  
+Example: `artisan scheduler-watcher:cleanup --keep 20`  
+This Command deletes all job_event entries of **ALL** your jobs from table `job_events` except tha last 20 newest of each job
 
 ## FAQ
 
@@ -256,6 +265,9 @@ able to collect data for a long time, for instance you want to check the duratio
 you will see entries in `job_events` and `job_event_outputs` **ONLY** if your job  
 generates any output at all. if your job does "nothing" because of some conditions,  
 make sure you do at least something like: `$this->info('nothing todo....');` 
+
+**how do i keep my tables clean and prevent them from growing till i run out of space?**  
+check tha artisan commands `cleanup` and `cleanup-all`
 
 ## More Documentation
 [gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher)
