@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 
 trait LaravelSchedulerWatcher {
 
-    private array $measure_times = [];
+    private $measure_times = [];
 
     public function monitor(Schedule $schedule): void {
         $events = new Collection($schedule->events());

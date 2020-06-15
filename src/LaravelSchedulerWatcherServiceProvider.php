@@ -10,8 +10,8 @@ use macropage\LaravelSchedulerWatcher\Console\SchedulerWatcherCommandCheckLastRu
 
 class LaravelSchedulerWatcherServiceProvider extends ServiceProvider {
 
-    protected string $configPath = __DIR__ . '/../config/scheduler-watcher.php';
-    protected string $migrationsPath = __DIR__ . '/../migrations';
+    protected $configPath = __DIR__ . '/../config/scheduler-watcher.php';
+    protected $migrationsPath = __DIR__ . '/../migrations';
 
     /**
      * Bootstrap the application services.
