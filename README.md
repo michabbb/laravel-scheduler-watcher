@@ -269,6 +269,10 @@ make sure you do at least something like: `$this->info('nothing todo....');`
 **how do i keep my tables clean and prevent them from growing till i run out of space?**  
 check tha artisan commands `cleanup` and `cleanup-all`
 
+**the output of `php artisan schedule:run` shows me the error: `The "--mutex" option does not exist.`**  
+inside your artisan command, you didn´t use the trait `LaravelSchedulerCustomMutex`, please read the  
+section **inside your artisan-command** in this document.  
+
 ## More Documentation
 [gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher)
 
