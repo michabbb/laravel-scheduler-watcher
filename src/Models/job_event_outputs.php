@@ -47,6 +47,11 @@ class job_event_outputs extends Model {
      */
     protected $connection = 'mysql_scheduler';
 
+    public function __construct(array $attributes = []) {
+        $this->table = config('scheduler-watcher.table_prefix').'job_event_outputs';
+        parent::__construct($attributes);
+    }
+
     /**
      * @return BelongsTo
      */

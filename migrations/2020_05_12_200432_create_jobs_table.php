@@ -12,7 +12,7 @@ class CreateJobsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::connection('mysql_scheduler')->create('jobs', function(Blueprint $table)
+		Schema::connection('mysql_scheduler')->create(config('scheduler-watcher.table_prefix').'jobs', function(Blueprint $table)
 		{
 			$table->integer('job_id', true);
 			$table->char('job_md5', 32)->unique('UK_jobs_job_md5');
@@ -30,7 +30,7 @@ class CreateJobsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::connection('mysql_scheduler')->drop('jobs');
+		Schema::connection('mysql_scheduler')->drop(config('scheduler-watcher.table_prefix').'jobs');
 	}
 
 }

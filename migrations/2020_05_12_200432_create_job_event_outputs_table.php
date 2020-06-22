@@ -12,7 +12,7 @@ class CreateJobEventOutputsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::connection('mysql_scheduler')->create('job_event_outputs', function(Blueprint $table)
+		Schema::connection('mysql_scheduler')->create(config('scheduler-watcher.table_prefix').'job_event_outputs', function(Blueprint $table)
 		{
 			$table->integer('jobo_id', true);
 			$table->integer('jobo_jobe_id')->nullable()->index('FK_job_event_outputs_job_events_jobe_id');
@@ -28,7 +28,7 @@ class CreateJobEventOutputsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::connection('mysql_scheduler')->drop('job_event_outputs');
+		Schema::connection('mysql_scheduler')->drop(config('scheduler-watcher.table_prefix').'job_event_outputs');
 	}
 
 }
