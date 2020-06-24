@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.4",
         "malios/php-to-ascii-table" : "^2.0",
         "codedungeon/php-cli-colors" : "^1.0"
     },
