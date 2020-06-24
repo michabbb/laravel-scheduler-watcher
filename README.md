@@ -4,6 +4,9 @@
 Log your scheduled commands with start, end, duration, exitcode and output in a seperate database.  
 Share a custom Mutex between Scheduler and Artisan-Command to identify each call with all parameters and options.
 
+**This package is made for php 7.4 and Laravel 7**   
+If you are working with something older, feel free to fork this project.
+
 ## Why?
 
 Because you should!  
