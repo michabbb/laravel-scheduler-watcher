@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateJobEventOutputsTable extends Migration {
+class CreateSchedulerWatcherJobEventOutputsTable extends Migration {
 
 	/**
 	 * Run the migrations.

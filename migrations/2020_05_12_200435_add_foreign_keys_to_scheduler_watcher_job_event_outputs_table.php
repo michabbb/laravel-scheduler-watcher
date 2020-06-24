@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddForeignKeysToJobEventOutputsTable extends Migration {
+class AddForeignKeysToSchedulerWatcherJobEventOutputsTable extends Migration {
 
 	/**
 	 * Run the migrations.
