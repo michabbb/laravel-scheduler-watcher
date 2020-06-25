@@ -29,7 +29,8 @@ composer require macropage/laravel-scheduler-watcher
 ```
 
 Publish config & migration using `php artisan vendor:publish --provider="macropage\LaravelSchedulerWatcher\LaravelSchedulerWatcherServiceProvider"`  
-Set `mysql_connection` in: `app/config/scheduler-watcher.php`   
+Set `mysql_connection` in: `app/config/scheduler-watcher.php`  
+In case you want a specific table prefix, because you already have a table names "jobs", [you can add one in the config](https://github.com/michabbb/laravel-scheduler-watcher/blob/master/config/scheduler-watcher.php#L8).   
 Create mysql tables: `php artisan migrate`
 
 ## Usage
