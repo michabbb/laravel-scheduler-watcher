@@ -18,7 +18,8 @@
     "require": {
         "php": "^7.4",
         "malios/php-to-ascii-table" : "^2.0",
-        "codedungeon/php-cli-colors" : "^1.0"
+        "codedungeon/php-cli-colors" : "^1.0",
+        "sensiolabs/ansi-to-html" : "v1.2.*"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
