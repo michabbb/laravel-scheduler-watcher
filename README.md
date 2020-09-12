@@ -19,6 +19,7 @@ My personal goal is to monitor jobs with the following criteria:
 - notify me if a jobs duration takes much longer as it should
 - monitor something from a central point even in distributed environments
 - monitor individual jobs with my good old nagios (yeah, don´t blame me)
+- confirm failed jobs via web `/scheduler-watcher`
 
 ## Installation
 
@@ -221,7 +222,10 @@ This Command deletes all job_event entries of **ALL** your jobs from table `job_
 ## FAQ
 
 **is there any webinterface?**   
-no. maybe in the future.
+a new route gets published `/scheduler-watcher` which only gives you an overview of failed jobs  
+and the opportunity to confirm a failed job so it is able to run again - very simple.  
+in other words, you are to `update job_events set jobe_exitcode=0 WHERE jobe_id=?` via web,  
+very useful if you are on the go.
 
 **are notifications included in this package?**  
 no, it´s up to you what you do with your logging.  
