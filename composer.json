@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "malios/php-to-ascii-table" : "^2.0",
         "codedungeon/php-cli-colors" : "^1.0",
         "sensiolabs/ansi-to-html" : "v1.2.*"
