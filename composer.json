@@ -17,9 +17,9 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "malios/php-to-ascii-table" : "^2.0",
+        "macropage/php-to-ascii-table" : "dev-master",
         "codedungeon/php-cli-colors" : "^1.0",
-        "sensiolabs/ansi-to-html" : "v1.2.*"
+        "macropage/ansi-to-html" : "dev-master"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
