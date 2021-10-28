@@ -17,7 +17,7 @@ class CreateSchedulerWatcherJobEventsTable extends Migration {
             $table->dateTime('jobe_start')->nullable();
             $table->dateTime('jobe_end')->nullable();
             $table->float('jobe_duration', 20, 13)->nullable();
-            $table->boolean('jobe_exitcode')->nullable();
+            $table->smallInteger('jobe_exitcode')->nullable();
             $table->dateTime('jobe_db_created')->nullable();
         });
     }
