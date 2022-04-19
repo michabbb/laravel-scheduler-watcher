@@ -14,7 +14,7 @@ class SchedulerWatcherCommandCheckLastRun extends Command {
      *
      * @var string
      */
-    protected $signature = 'scheduler-watcher:checklastevent {jobMD5} {--no-ansi}';
+    protected $signature = 'scheduler-watcher:checklastevent {jobMD5} {--noansi}';
 
     /**
      * The console command description.
@@ -51,7 +51,7 @@ class SchedulerWatcherCommandCheckLastRun extends Command {
         $job_output = job_event_outputs::whereJoboJobeId($last_job_events->jobe_id)->first('jobo_output');
         $output = "Last exitcode from job: ".$job->job_name.': ['.$last_job_events->jobe_exitcode.'] - last output: ';
         if ($job_output) {
-            if ($this->option('no-ansi')) {
+            if ($this->option('noansi')) {
                 /**
                  * @see https://stackoverflow.com/a/40731340/1092858
                  */
@@ -70,7 +70,7 @@ class SchedulerWatcherCommandCheckLastRun extends Command {
      * @param int  $exitcode
      */
     private function echo($str, $type=null, $exitcode=0):void {
-        if ($this->option('no-ansi')) {
+        if ($this->option('noansi')) {
             echo $str;
         } else {
             switch ($exitcode) {
