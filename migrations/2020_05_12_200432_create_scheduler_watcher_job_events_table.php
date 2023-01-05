@@ -21,6 +21,7 @@ class CreateSchedulerWatcherJobEventsTable extends Migration
             $table->float('jobe_duration', 20, 13)->nullable();
             $table->unsignedTinyInteger('jobe_exitcode')->nullable();
             $table->dateTime('jobe_db_created')->nullable();
+            $table->dateTime('jobe_db_changed')->nullable();
         });
     }
 

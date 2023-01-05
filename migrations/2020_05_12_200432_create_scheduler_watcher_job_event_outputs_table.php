@@ -17,6 +17,7 @@ class CreateSchedulerWatcherJobEventOutputsTable extends Migration
             $table->integer('jobo_id', true);
             $table->integer('jobo_jobe_id')->nullable()->index('FK_job_event_outputs_job_events_jobe_id');
             $table->text('jobo_output')->nullable();
+            $table->dateTime('jobo_db_created')->nullable();
         });
     }
 
