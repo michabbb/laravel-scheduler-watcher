@@ -19,7 +19,7 @@ class LaravelSchedulerWatcherServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
 
         $this->loadMigrationsFrom($this->migrationsPath);
@@ -42,7 +42,7 @@ class LaravelSchedulerWatcherServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom($this->configPath, 'scheduler-watcher');
     }

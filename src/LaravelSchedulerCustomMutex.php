@@ -4,8 +4,10 @@ namespace macropage\LaravelSchedulerWatcher;
 
 use macropage\LaravelSchedulerWatcher\Models\job_events;
 
-trait LaravelSchedulerCustomMutex {
-    public function setSignature($signature): void {
+trait LaravelSchedulerCustomMutex
+{
+    public function setSignature($signature): void
+    {
         $this->signature = $signature . ' {--mutex} {--description} {--F|force}';
     }
 
@@ -19,7 +21,8 @@ trait LaravelSchedulerCustomMutex {
         return false;
     }*/
 
-    public function lastRunWasNotOkay(): int {
+    public function lastRunWasNotOkay(): int
+    {
         if ($this && !$this->option('force')) {
             $last_job_event = job_events::whereHas('job', function ($query) {
                 $query->whereJobMd5($this->getCustomMutex());
@@ -30,24 +33,27 @@ trait LaravelSchedulerCustomMutex {
         return false;
     }
 
-    public function getCustomMutex(): string {
+    public function getCustomMutex(): string
+    {
         $CommandOptions = $this->options();
         unset($CommandOptions['mutex']);
 
-        $LaravelDefaultOptions = $this->getApplication()->getDefinition()->getOptions();
+        $LaravelDefaultOptions = $this->getApplication()?->getDefinition()->getOptions();
         $onlyMyOptions         = array_diff_key($CommandOptions, $LaravelDefaultOptions);
         $arguments             = $this->arguments();
         ksort($arguments);
         ksort($onlyMyOptions);
 
-        return md5(serialize([
-                                 'name'      => $this->getName(),
-                                 'arguments' => $arguments,
-                                 'options'   => $onlyMyOptions
-                             ]));
+        return md5(
+            serialize([
+                          'name'      => $this->getName(),
+                          'arguments' => $arguments,
+                          'options'   => $onlyMyOptions
+                      ]));
     }
 
-    public function checkCustomMutex(): bool {
+    public function checkCustomMutex(): bool
+    {
         if ($this && $this->option('mutex')) {
             $this->info($this->getCustomMutex());
 

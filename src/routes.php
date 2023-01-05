@@ -1,14 +1,15 @@
 <?php
 
 use macropage\LaravelSchedulerWatcher\Models\job_events;
-use \Illuminate\Http\Request;
+use Illuminate\Http\Request;
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 Route::get('scheduler-watcher', static function () {
     $last_job_events = job_events::where('jobe_exitcode', '>', 0)->with('job')->with('jobEventOutputs')->get();
 
     return view('LaravelSchedulerWatcher::overview', [
         'job_events' => $last_job_events,
-        'converter'  => new \SensioLabs\AnsiConverter\AnsiToHtmlConverter()
+        'converter'  => new AnsiToHtmlConverter()
     ]);
 });
 
@@ -25,6 +26,6 @@ Route::post('scheduler-watcher', static function (Request $request) {
 
     return view('LaravelSchedulerWatcher::overview', [
         'job_events' => $last_job_events,
-        'converter'  => new \SensioLabs\AnsiConverter\AnsiToHtmlConverter()
+        'converter'  => new AnsiToHtmlConverter()
     ]);
 });

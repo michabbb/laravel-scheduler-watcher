@@ -2,6 +2,8 @@
 
 namespace macropage\LaravelSchedulerWatcher\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,15 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int        $jobo_jobe_id
  * @property string     $jobo_output
  * @property job_events $jobEvent
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs query()
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs whereJoboId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs whereJoboJobeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\macropage\LaravelSchedulerWatcher\Models\job_event_outputs whereJoboOutput($value)
- * @mixin \Eloquent
+ * @method static Builder|job_event_outputs newModelQuery()
+ * @method static Builder|job_event_outputs newQuery()
+ * @method static Builder|job_event_outputs query()
+ * @method static Builder|job_event_outputs whereJoboId($value)
+ * @method static Builder|job_event_outputs whereJoboJobeId($value)
+ * @method static Builder|job_event_outputs whereJoboOutput($value)
+ * @mixin Eloquent
  */
-class job_event_outputs extends Model {
+class job_event_outputs extends Model
+{
     /**
      * The primary key for the model.
      *
@@ -31,7 +34,10 @@ class job_event_outputs extends Model {
     /**
      * @var array
      */
-    protected $fillable = ['jobo_jobe_id', 'jobo_output'];
+    protected $fillable = [
+        'jobo_jobe_id',
+        'jobo_output'
+    ];
 
     /**
      * Indicates if the model should be timestamped.
@@ -40,22 +46,18 @@ class job_event_outputs extends Model {
      */
     public $timestamps = false;
 
-    /**
-     * The connection name for the model.
-     *
-     * @var string
-     */
-    protected $connection = 'mysql_scheduler';
-
-    public function __construct(array $attributes = []) {
-        $this->table = config('scheduler-watcher.table_prefix').'job_event_outputs';
+    public function __construct(array $attributes = [])
+    {
+        $this->connection = config('laravel-scheduler-watcher.mysql_connection');
+        $this->table      = config('scheduler-watcher.table_prefix') . 'job_event_outputs';
         parent::__construct($attributes);
     }
 
     /**
      * @return BelongsTo
      */
-    public function jobEvent() {
+    public function jobEvent(): BelongsTo
+    {
         return $this->belongsTo(job_events::class, 'jobo_jobe_id', 'jobe_id');
     }
 }

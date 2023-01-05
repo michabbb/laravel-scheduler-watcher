@@ -2,26 +2,31 @@
 
 namespace macropage\LaravelSchedulerWatcher;
 
-use macropage\LaravelSchedulerWatcher\Models\job_event_outputs;
-use macropage\LaravelSchedulerWatcher\Models\job_events;
-use macropage\LaravelSchedulerWatcher\Models\jobs;
+use Artisan;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
+use macropage\LaravelSchedulerWatcher\Models\job_event_outputs;
+use macropage\LaravelSchedulerWatcher\Models\job_events;
+use macropage\LaravelSchedulerWatcher\Models\jobs;
+use Throwable;
 
-trait LaravelSchedulerWatcher {
+trait LaravelSchedulerWatcher
+{
 
     private array $measure_times = [];
 
-    public function monitor(Schedule $schedule): void {
+    public function monitor(Schedule $schedule): void
+    {
         $events = new Collection($schedule->events());
         $events->each(function (Event $event) {
 
             $switches = [];
 
             if ($event->description) {
-                preg_match_all('/.*\[(.*)]$/m', $event->description, $matches, PREG_SET_ORDER, 0);
+                preg_match_all('/.*\[(.*)]$/m', $event->description, $matches, PREG_SET_ORDER );
                 if (count($matches)) {
                     $switches = explode(',', $matches[0][1]);
                 }
@@ -29,12 +34,12 @@ trait LaravelSchedulerWatcher {
 
             if (in_array('log', $switches, true)) {
 
-                if (preg_match('/\'artisan\'/', $event->command)) {
+                if (str_contains($event->command, '\'artisan\'')) {
                     $commandSplittet = explode('\'artisan\'', $event->command);
                     $getMutexCall    = trim($commandSplittet[1]) . ' --mutex';
 
-                    \Artisan::call($getMutexCall);
-                    $output       = \Artisan::output();
+                    Artisan::call($getMutexCall);
+                    $output       = Artisan::output();
                     $customMutexd = trim($output);
                 } else {
                     $customMutexd = md5($event->command);
@@ -64,14 +69,16 @@ trait LaravelSchedulerWatcher {
                     $this->measure_times[$customMutexd]['start_date'] = Carbon::now();
                 });
 
-                $event->sendOutputTo($outputLogFile)->after(function () use ($customMutexd, $outputLogFile, $event, $Description, $switches) {
+                $event->sendOutputTo($outputLogFile)->after(
+                /**
+                 * @throws Throwable
+                 */ function () use ($customMutexd, $outputLogFile, $event, $Description, $switches) {
 
                     $this->measure_times[$customMutexd]['duration'] = microtime(true) - $this->measure_times[$customMutexd]['start'];
                     $this->measure_times[$customMutexd]['end_date'] = Carbon::now();
 
                     if (file_exists($outputLogFile) && $logData = file_get_contents($outputLogFile)) {
-                        \DB::connection(config('scheduler-watcher.mysql_connection'))->transaction(function () use ($logData, $customMutexd, $event, $Description, $switches) {
-                            /** @var jobs $jobFound */
+                        DB::connection(config('laravel-scheduler-watcher.mysql_connection'))->transaction(function () use ($logData, $customMutexd, $event, $Description, $switches) {
                             $jobFound = jobs::where('job_md5', '=', $customMutexd)->first('job_id');
                             if (!$jobFound) {
                                 $job              = new jobs();
@@ -94,7 +101,7 @@ trait LaravelSchedulerWatcher {
                             if (!in_array('nooutput', $switches, true)) {
                                 $jobEventOutput = new job_event_outputs([
                                                                             'jobo_jobe_id' => $jobEvent->jobe_id,
-                                                                            'jobo_output'  => mb_substr($logData,0,21844)
+                                                                            'jobo_output'  => mb_substr($logData, 0, 21844)
                                                                         ]);
                                 $jobEventOutput->save();
                             }

@@ -2,6 +2,7 @@
 
 namespace macropage\LaravelSchedulerWatcher\Console;
 
+use AsciiTable\Exception\BuilderException;
 use Codedungeon\PHPCliColors\Color;
 use macropage\LaravelSchedulerWatcher\Models\job_event_outputs;
 use macropage\LaravelSchedulerWatcher\Models\job_events;
@@ -25,20 +26,10 @@ class SchedulerWatcherCommandInfo extends Command {
     protected $description = 'Get common infos of Jobs';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
+     * @throws BuilderException
      */
-    public function __construct() {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle() {
+    public function handle(): int
+    {
         $job = jobs::whereJobMd5($this->argument('jobMD5'))->first();
         if (!$job) {
             $this->alert('unable to find any job with your md5');
@@ -54,7 +45,7 @@ class SchedulerWatcherCommandInfo extends Command {
          */
         $builder = new Builder();
         $builder->setTitle(Color::LIGHT_GREEN.'Job Info: '.$job->job_name.'  '.Color::RESET.'-  '.Color::GREEN.$job->job_command.Color::RESET);
-        $builder->addRow((array)$job->getAttributes());
+        $builder->addRow($job->getAttributes());
         echo "\n\n".$builder->renderTable()."\n\n";
         /**
          * Last events
@@ -66,7 +57,7 @@ class SchedulerWatcherCommandInfo extends Command {
             if (!$last_job_event_id) {
                 $last_job_event_id = $job_event->jobe_id;
             }
-            $builder->addRow((array)$job_event->getAttributes());
+            $builder->addRow($job_event->getAttributes());
         }
         echo $builder->renderTable()."\n\n";
         /**

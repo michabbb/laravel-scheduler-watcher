@@ -23,30 +23,17 @@ class SchedulerWatcherCommandCheckLastRun extends Command {
      */
     protected $description = 'Get common infos of Jobs';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle() {
+    public function handle(): string|int|null
+    {
         $job = jobs::whereJobMd5($this->argument('jobMD5'))->first();
         if (!$job) {
             $this->echo('unable to find any job with your md5','error');
-            return 2;
+            return self::INVALID;
         }
         $last_job_events = job_events::whereJobeJobId($job->job_id)->orderByDesc('jobe_id')->limit(1)->get()->first();
         if (!$last_job_events) {
             $this->echo('no events found for this job','warn');
-            return 2;
+            return self::INVALID;
         }
         $job_output = job_event_outputs::whereJoboJobeId($last_job_events->jobe_id)->first('jobo_output');
         $output = "Last exitcode from job: ".$job->job_name.': ['.$last_job_events->jobe_exitcode.'] - last output: ';
@@ -64,26 +51,15 @@ class SchedulerWatcherCommandCheckLastRun extends Command {
         return $last_job_events->jobe_exitcode;
     }
 
-    /**
-     * @param      $str
-     * @param null $type
-     * @param int  $exitcode
-     */
-    private function echo($str, $type=null, $exitcode=0):void {
+    private function echo($str, ?string $type=null, int $exitcode=0):void {
         if ($this->option('noansi')) {
             echo $str;
         } else {
-            switch ($exitcode) {
-                case 1:
-                    $type = 'warn';
-                    breaK;
-                case 0:
-                    $type = 'info';
-                    break;
-                default:
-                    $type = 'error';
-                    break;
-            }
+            $type = match ($exitcode) {
+                1       => 'warn',
+                0       => 'info',
+                default => 'error',
+            };
             $this->$type($str);
         }
     }

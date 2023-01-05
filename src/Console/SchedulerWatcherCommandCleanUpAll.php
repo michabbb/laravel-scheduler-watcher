@@ -6,7 +6,8 @@ use macropage\LaravelSchedulerWatcher\Models\job_events;
 use macropage\LaravelSchedulerWatcher\Models\jobs;
 use Illuminate\Console\Command;
 
-class SchedulerWatcherCommandCleanUpAll extends Command {
+class SchedulerWatcherCommandCleanUpAll extends Command
+{
     /**
      * The name and signature of the console command.
      *
@@ -21,23 +22,9 @@ class SchedulerWatcherCommandCleanUpAll extends Command {
      */
     protected $description = 'Clean table job_events and keep last X entries of every existing job';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        parent::__construct();
-    }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     * @throws \Exception
-     * @noinspection DuplicatedCode
-     */
-    public function handle() {
+    public function handle(): int
+    {
         $jobs = jobs::all();
         if ($jobs->isEmpty()) {
             $this->alert('no jobs found!');
