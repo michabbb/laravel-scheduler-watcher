@@ -84,68 +84,6 @@ class Kernel extends ConsoleKernel {
 ```
 Inside the `schedule` function, call the monitor. This is the place where all the magic happens ;)
 
-#### inside your artisan-command
-The Scheduler needs to be able to get the `CustomMutex` generated from your Artisan-Command.  
-Because I don´t know (for now) how the Scheduler can talk directly to an Artisan-Command,  
-you have to make some very little modifications there, too.
-```php
-<?php
-
-namespace App\Console\Commands;
-
-use Illuminate\Console\Command;
-use macropage\LaravelSchedulerWatcher\LaravelSchedulerCustomMutex;
-
-class dummy extends Command {
-
-    use LaravelSchedulerCustomMutex;
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = '';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->setSignature('dummy:test {blabla} {--c|check} {--t|test}');
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle() {
-        if ($this->checkCustomMutex()) {
-            return 0;
-        }
-        // your regular code
-    }
-}
-```
-The things you have to do here:
-- `use LaravelSchedulerCustomMutex;`
-- set your `Signature` with the helper `setSignature` instead directly (because --mutex gets added automatically)
-- inside `handle` add the `checkCustomMutex`
-
-with that, you are good to start.
-
-
-
 ## Logging to File
 The last Output-File (the file that captured the output of your job) will be written to `/tmp/<mutex>.scheduler.output.log`.  
 `<mutex>` = the custom mutex generated based on your command + all arguments and parameters.  
@@ -158,8 +96,17 @@ The `<mutex>` **is not** the same Mutex laravel uses for handling `withoutOverla
 `withoutOverlapping` is still handled by laravel itself. The custom Mutex of this package is only used to identify your commands  
 with a simple md5-hash.
 The Mutex does **NOT** contain the crontab info `* * * * 5` itself, because from my point of view,  
-it´s not important "when" something is running, it´s more important "what" is running. And for this, you need to know the  
-command itself, the arguments and options. Check the function `getCustomMutex` in case it´s not clear ;)
+it´s not important "when" something is running, it´s more important "what" is running. 
+That´s why I only use the `command` of the schedule event:
+
+```
+command: "'/usr/local/bin/php' 'artisan' testing:test --bla='blub'"
+```
+
+So in this case the mutex (md5) would be: `md5("testing:test --bla='blub'")`
+
+If the command would be: `command: "'/usr/bin/bash' 'echo hello'"`
+the mutex would be: `md5("'/usr/bin/bash' 'echo hello'")`
 
 ## Helper Artisan Commands
 ### scheduler-watcher:info
@@ -276,10 +223,6 @@ make sure you do at least something like: `$this->info('nothing todo....');`
 
 **how do i keep my tables clean and prevent them from growing till i run out of space?**  
 check tha artisan commands `cleanup` and `cleanup-all`
-
-**the output of `php artisan schedule:run` shows me the error: `The "--mutex" option does not exist.`**  
-inside your artisan command, you didn´t use the trait `LaravelSchedulerCustomMutex`, please read the  
-section **inside your artisan-command** in this document.  
 
 ## More Documentation
 [gitbook](https://michabbb.gitbook.io/laravel-scheduler-watcher)

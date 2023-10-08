@@ -36,11 +36,7 @@ trait LaravelSchedulerWatcher
 
                 if (str_contains($event->command, '\'artisan\'')) {
                     $commandSplittet = explode('\'artisan\'', $event->command);
-                    $getMutexCall    = trim($commandSplittet[1]) . ' --mutex';
-
-                    Artisan::call($getMutexCall);
-                    $output       = Artisan::output();
-                    $customMutexd = trim($output);
+                    $customMutexd = md5(trim($commandSplittet[1]));
                 } else {
                     $customMutexd = md5($event->command);
                 }
