@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.1 || ^8.2 || ^8.3",
         "macropage/php-to-ascii-table" : "dev-master",
         "codedungeon/php-cli-colors" : "^1.0",
         "macropage/ansi-to-html" : "dev-master"

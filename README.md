@@ -66,23 +66,24 @@ $schedule->command('dummy:test blabla -c')->everyMinute()->description('Call dum
 The switch "force" lets run your command, ignoring last exitcode. **be careful: this can spam your DB.**  
 Personally I would use "force" only with "nooutput".
 
-#### Kernel.php
-To use the logging, you have to include the Trait `LaravelSchedulerWatcher` into your `app\Console\Kernel.php`
+#### routes/console.php
 ```php
 <?php
+<?php
+
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
 use macropage\LaravelSchedulerWatcher\LaravelSchedulerWatcher;
 
-class Kernel extends ConsoleKernel {
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})
+    ->description('Display an inspiring quote [log]')
+    ->hourly();
 
-  use LaravelSchedulerWatcher;
-
-  protected function schedule(Schedule $schedule): void {
-    $schedule->command('dummy:test blabla -c')->everyMinute()->description('Call dummy test');
-    $this->monitor($schedule);
-  }
-}
+LaravelSchedulerWatcher::monitor();
 ```
-Inside the `schedule` function, call the monitor. This is the place where all the magic happens ;)
+Somewhere in your code call the Monitor, this is the place where all the magic happens ;)
 
 ## Logging to File
 The last Output-File (the file that captured the output of your job) will be written to `/tmp/<mutex>.scheduler.output.log`.  
