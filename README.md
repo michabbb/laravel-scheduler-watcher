@@ -4,7 +4,7 @@
 Log your scheduled commands with start, end, duration, exitcode and output in a seperate database.  
 Share a custom Mutex between Scheduler and Artisan-Command to identify each call with all parameters and options.
 
-**This package is made for php 8.x and Laravel 9**   
+**This package is made for php 8.x and Laravel 12**
 If you are working with something older, feel free to fork this project.
 
 ## Why?
@@ -40,6 +40,7 @@ Write your cron-jobs as usal, but use the "description" to control your logging:
 - log
 - nooutput
 - force
+- maxruntime=240
 
 **Example 1:**
 ```php
@@ -66,6 +67,26 @@ $schedule->command('dummy:test blabla -c')->everyMinute()->description('Call dum
 The switch "force" lets run your command, ignoring last exitcode. **be careful: this can spam your DB.**  
 Personally I would use "force" only with "nooutput".
 
+**Example 5: Background commands**
+```php
+$schedule->command('dummy:long-running-task')
+    ->hourly()
+    ->withoutOverlapping()
+    ->runInBackground()
+    ->description('Call long running task [log,maxruntime=240]');
+```
+Background commands are supported, but `[log]` + `runInBackground()` **requires** `withoutOverlapping()`.
+Without Laravel's overlap mutex, parallel runs of the same command can overwrite the watcher temp files.
+For safety, the watcher skips unsupported background events and writes a warning to the Laravel log.
+
+Use `maxruntime=240` to store the expected maximum runtime in minutes for this job. The web UI uses this
+value to decide when an unfinished job should be shown. If no `maxruntime` is configured for a job, the
+config value `show_unfinished_after_minutes` is used.
+
+When a monitored job starts, the watcher immediately creates a `job_events` row with `jobe_end`,
+`jobe_exitcode`, and `jobe_duration` set to `NULL`. The `after()` callback finalizes that row. This means
+that a hard-killed background process leaves a visible hanging row instead of disappearing completely.
+
 #### routes/console.php
 ```php
 <?php
@@ -90,6 +111,8 @@ The last Output-File (the file that captured the output of your job) will be wri
 `<mutex>` = the custom mutex generated based on your command + all arguments and parameters.  
 The last output-logfile **does not get deleted**, this is intentional.  
 I thought it´s a good idea so you always have quick access to the last output for debugging without looking into the DB.
+The watcher also uses `/tmp/<mutex>.scheduler.eventid` internally while a monitored job is running. This
+file is removed after the run is finalized.
 
 ## Mutex
 In case you never heard "mutex", you might want to read [this](https://divinglaravel.com/preventing-scheduled-jobs-overlapping).  
@@ -206,6 +229,7 @@ use the table `job_events`. with the information there, you can write your own s
 - last time the job has been executed (jobe_start)
 - last time the job has been executed successfully (jobe_start + jobe_exitcode)
 - how long did the job take (jobe_duration)
+- jobs that started but never finished (jobe_end is null)
  
 if any of these informations do not fit into your personal range, send yourself a notification, that´s it.
 
@@ -218,9 +242,20 @@ that duplicates all entries. with that you don´t loose performance with the act
 able to collect data for a long time, for instance you want to check the duration of your jobs over months. 
 
 **i am using [log] but there is no entry in table 'job_events'**  
-you will see entries in `job_events` and `job_event_outputs` **ONLY** if your job  
-generates any output at all. if your job does "nothing" because of some conditions,  
-make sure you do at least something like: `$this->info('nothing todo....');` 
+you should see entries in `job_events` even if your job does not generate output.
+`job_event_outputs` only gets a row if output exists and you did not use `[nooutput]`.
+For background jobs, make sure you also use `withoutOverlapping()`, otherwise the watcher skips the event and logs a warning.
+
+**how do i find background jobs that started but never finished?**
+query `job_events` for rows where `jobe_end is null` and the configured max runtime is exceeded. Example
+with a 360 minute fallback:
+```sql
+SELECT j.job_command, j.job_max_runtime_minutes, je.jobe_start, TIMESTAMPDIFF(MINUTE, je.jobe_start, NOW()) AS running_minutes
+FROM job_events je
+JOIN jobs j ON j.job_id = je.jobe_job_id
+WHERE je.jobe_end IS NULL
+  AND TIMESTAMPDIFF(MINUTE, je.jobe_start, NOW()) > COALESCE(NULLIF(j.job_max_runtime_minutes, 0), 360);
+```
 
 **how do i keep my tables clean and prevent them from growing till i run out of space?**  
 check tha artisan commands `cleanup` and `cleanup-all`

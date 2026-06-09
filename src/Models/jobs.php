@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string        $job_md5
  * @property string        $job_name
  * @property string        $job_command
+ * @property int|null      $job_max_runtime_minutes
  * @property string        $job_created
  * @property job_events[]  $jobEvents
  * @property string|null   $job_db_created
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|jobs query()
  * @method static Builder|jobs whereJobDbCreated($value)
  * @method static Builder|jobs whereJobId($value)
+ * @method static Builder|jobs whereJobMaxRuntimeMinutes($value)
  * @method static Builder|jobs whereJobMd5($value)
  * @method static Builder|jobs whereJobName($value)
  * @mixin Eloquent
@@ -43,7 +45,8 @@ class jobs extends Model
         'job_md5',
         'job_name',
         'job_created',
-        'job_command'
+        'job_command',
+        'job_max_runtime_minutes'
     ];
 
     /**

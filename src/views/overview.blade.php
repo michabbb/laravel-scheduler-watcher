@@ -22,46 +22,66 @@
     <div class="container-xl pt-4 w-auto">
         <div class="card">
             <div class="card-header">
-                Laravel Scheduler Watcher - Overview failed jobs
+                Laravel Scheduler Watcher - Overview failed and unfinished jobs
             </div>
             <div class="card-body">
                 <form method="POST" action="/scheduler-watcher">
                     @csrf
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th scope="col">Confirm Error</th>
-                            <th scope="col">job_id</th>
-                            <th scope="col">job_md5</th>
-                            <th scope="col">job_name</th>
-                            <th scope="col">job_command</th>
-                            <th scope="col">jobe_start</th>
-                            <th scope="col">jobe_end</th>
-                            <th scope="col">jobe_duration</th>
-                            <th scope="col">jobe_exitcode</th>
-                            <th scope="col">last_output</th>
+	                        <tr>
+	                            <th scope="col">Confirm Error</th>
+	                            <th scope="col">status</th>
+	                            <th scope="col">job_id</th>
+	                            <th scope="col">job_md5</th>
+	                            <th scope="col">job_name</th>
+	                            <th scope="col">job_command</th>
+	                            <th scope="col">jobe_start</th>
+	                            <th scope="col">jobe_end</th>
+	                            <th scope="col">jobe_duration</th>
+	                            <th scope="col">jobe_exitcode</th>
+	                            <th scope="col">max_runtime_minutes</th>
+	                            <th scope="col">last_output</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($job_events as $job_event)
                             <tr>
                                 <td>
-                                    <button name="jobe_id" type="submit"
-                                            class="btn btn-success small text-center"
-                                            value="{{$job_event->jobe_id}}">confirm
-                                    </button>
+                                    @if($job_event->jobe_exitcode > 0)
+                                        <button name="jobe_id" type="submit"
+                                                class="btn btn-success small text-center"
+                                                value="{{$job_event->jobe_id}}">confirm
+                                        </button>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($job_event->jobe_exitcode > 0)
+                                        failed
+                                    @elseif(is_null($job_event->jobe_end) || is_null($job_event->jobe_exitcode))
+                                        unfinished
+                                    @else
+                                        ok
+                                    @endif
                                 </td>
                                 <th scope="row">{{$job_event->job->job_id}}</th>
                                 <td>{{$job_event->job->job_md5}}</td>
                                 <td>{{$job_event->job->job_name}}</td>
                                 <td>{{$job_event->job->job_command}}</td>
-                                <td>{{$job_event->jobe_start}}</td>
-                                <td>{{$job_event->jobe_end}}</td>
-                                <td>{{$job_event->jobe_duration}}</td>
+	                                <td>{{$job_event->jobe_start}}</td>
+	                                <td>{{$job_event->jobe_end}}</td>
+	                                <td>{{$job_event->jobe_duration}}</td>
                                 <td>{{$job_event->jobe_exitcode}}</td>
+                                <td>{{$job_event->job->job_max_runtime_minutes ?: $show_unfinished_after_minutes}}</td>
                                 <td>
-                                    <pre
-                                        style="background-color: black; color: white">{!! $converter->convert($job_event->jobEventOutputs[0]->jobo_output) !!}</pre>
+                                    @if($job_event->jobEventOutputs->isNotEmpty())
+                                        <pre
+                                            style="background-color: black; color: white">{!! $converter->convert($job_event->jobEventOutputs->first()->jobo_output) !!}</pre>
+                                    @else
+                                        <span class="text-muted">no output</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

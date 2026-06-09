@@ -5,5 +5,6 @@
  */
 return [
     'mysql_connection' => 'mysql_scheduler',
-    'table_prefix' => ''
+    'table_prefix' => '',
+    'show_unfinished_after_minutes' => 360
 ];

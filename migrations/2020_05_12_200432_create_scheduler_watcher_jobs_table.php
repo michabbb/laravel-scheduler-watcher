@@ -18,6 +18,7 @@ class CreateSchedulerWatcherJobsTable extends Migration
             $table->char('job_md5', 32)->unique('UK_jobs_job_md5');
             $table->string('job_name');
             $table->string('job_command')->nullable();
+            $table->unsignedInteger('job_max_runtime_minutes')->nullable();
             $table->dateTime('job_db_created')->nullable();
         });
     }
